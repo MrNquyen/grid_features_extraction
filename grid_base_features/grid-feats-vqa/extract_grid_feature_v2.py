@@ -106,10 +106,15 @@ def extract_grid_feature_argument_parser():
     return parser.parse_args()
 
 def extract_grid_feature_on_dataset(model, data_loader, dump_folder):
+    exist_files = os.listdir(dump_folder)
+    ic(dump_folder)
     for idx, inputs in enumerate(tqdm(data_loader)):
         with torch.no_grad():
             # image_id = inputs[0]['image_id']
             image_ids = [item['image_id'] for item in inputs]
+            image_id = image_ids[0]
+            if f'{image_id}.pth' in exist_files:
+                continue
             file_names = [f'{img_id}.pth' for img_id in image_ids]
             # compute features
             images = model.preprocess_image(inputs)
